@@ -917,7 +917,7 @@ set -e
 # → primer commit → entorno virtual → dependencias → esqueleto de Django → formato del esqueleto.
 cp -Rn blueprints/cauce/workspace/. ./ || true  # -n: nunca pisa un archivo existente (requirements*, archivos ya editados). En macOS y coreutils >= 9.2 `cp -n` sale con 1 cuando salta archivos; saltar es lo esperado.
 git rev-parse --git-dir >/dev/null 2>&1 || git init -b main
-git rev-parse --verify HEAD >/dev/null 2>&1 || { git add -A && git commit -m "chore: estructura inicial, workspace y plan de construcción"; }
+git ls-files --error-unmatch .gitignore >/dev/null 2>&1 || { git add -A && git commit -m "chore: workspace, configuración y plan de construcción"; }  # una sola vez: cuando .gitignore aún no está en el repo (repo nuevo o ya creado por el equipo)
 test -d .venv || python -m venv .venv || python3 -m venv .venv
 sh scripts/py -m pip install --disable-pip-version-check -q -r requirements-dev.txt
 test -f manage.py || { sh scripts/py -m django startproject config . && rm config/urls.py; }  # las rutas viven en app.py
@@ -925,8 +925,8 @@ sh scripts/py -m ruff format -q manage.py config
 ```
 
 Archivos que la copia nunca pisa una vez existen: `requirements*.txt`, `README.md`, `app.py`,
-`config/settings.py` y todo lo que la construcción ya editó. El primer commit se crea **después**
-de que `.gitignore` está en su sitio, así `.venv/` y `staticfiles/` nunca se rastrean, y **antes**
+`config/settings.py` y todo lo que la construcción ya editó. El commit del Bootstrap se crea **después**
+de que `.gitignore` está en su sitio (y solo si `.gitignore` aún no estaba en el repo, así funciona igual con un repo nuevo o con uno que el equipo ya creó y conectó a GitHub), así `.venv/` y `staticfiles/` nunca se rastrean, y **antes**
 de generar el esqueleto de Django, así la clave aleatoria de `startproject` nunca entra al historial
 (el paso 1 reemplaza `settings.py` antes de su commit).
 
@@ -1135,8 +1135,7 @@ NOT APPLICABLE — this project does not call an LLM at runtime.
 
 | Skill | Build steps | Why | Install |
 |---|---|---|---|
-| `ui-ux-pro-max` (se activa sola) | 3, 5, 7, 8, 9 | Consultar patrones de componentes y accesibilidad al maquetar | Ya está instalada en este Claude Code (skills sincronizadas); si falta, usar §7 y `CLAUDE.md` |
-| `dataviz` (se activa sola) | 9 | Revisar paleta y forma de las gráficas | Ya está instalada en este Claude Code; si falta, usar las reglas de §7 |
+| `ui-ux-pro-max` (se activa sola, sin barra) | 3, 5, 7, 8, 9 | Patrones de componentes, gráficas y accesibilidad al maquetar | `/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill` y luego `/plugin install ui-ux-pro-max@ui-ux-pro-max-skill` (en este equipo ya está instalada) |
 
 Si una skill no está disponible, el constructor sigue con las especificaciones de los epics y lo
 anota en una línea.
@@ -1243,7 +1242,7 @@ Manual, una vez antes de presentar:
 
 - [ ] `git tag -l 'step-*'` lista las 13 etiquetas, de `step-01-django-health` a `step-13-accesibilidad`.
 - [ ] Cada archivo de la tabla "Files that must be committed" está rastreado: `git ls-files --error-unmatch <ruta>` sale con 0, **una ruta por invocación**; y no está ignorado: `git check-ignore -q <ruta>; test $? -eq 1` para cada una.
-- [ ] `.gitignore` entró en el commit del Bootstrap: `git log --diff-filter=A --format=%s -- .gitignore` muestra "chore: estructura inicial, workspace y plan de construcción".
+- [ ] `.gitignore` entró en el commit del Bootstrap: `git log --diff-filter=A --format=%s -- .gitignore` muestra "chore: workspace, configuración y plan de construcción".
 - [ ] El Bootstrap de §10 se volvió a ejecutar sobre el árbol ya construido, **terminó con código 0** y luego `sh scripts/py -m pytest` siguió en verde.
 - [ ] Todas las filas de *Cross-artifact value reconciliation* dicen `yes` y ruff/pytest se corrieron con el bundle presente.
 - [ ] Nada de la tabla Non-Goals de §1 está construido.

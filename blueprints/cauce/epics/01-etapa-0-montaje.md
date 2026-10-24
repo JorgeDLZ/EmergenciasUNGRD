@@ -60,15 +60,15 @@ set -e
 # → primer commit → entorno virtual → dependencias → esqueleto de Django → formato del esqueleto.
 cp -Rn blueprints/cauce/workspace/. ./ || true  # -n: nunca pisa un archivo existente (requirements*, archivos ya editados). En macOS y coreutils >= 9.2 `cp -n` sale con 1 cuando salta archivos; saltar es lo esperado.
 git rev-parse --git-dir >/dev/null 2>&1 || git init -b main
-git rev-parse --verify HEAD >/dev/null 2>&1 || { git add -A && git commit -m "chore: estructura inicial, workspace y plan de construcción"; }
+git ls-files --error-unmatch .gitignore >/dev/null 2>&1 || { git add -A && git commit -m "chore: workspace, configuración y plan de construcción"; }  # una sola vez: cuando .gitignore aún no está en el repo (repo nuevo o ya creado por el equipo)
 test -d .venv || python -m venv .venv || python3 -m venv .venv
 sh scripts/py -m pip install --disable-pip-version-check -q -r requirements-dev.txt
 test -f manage.py || { sh scripts/py -m django startproject config . && rm config/urls.py; }  # las rutas viven en app.py
 sh scripts/py -m ruff format -q manage.py config
 ```
 
-Qué deja: el repositorio con su primer commit (con `.gitignore` ya presente, así `.venv/` nunca se
-sube), `.venv/` con Django, gunicorn, whitenoise, ruff, pytest y pytest-django, y el esqueleto
+Qué deja: el repositorio (si ya existía, con sus commits intactos) más un commit del workspace
+con `.gitignore` ya presente, así `.venv/` nunca se sube, `.venv/` con Django, gunicorn, whitenoise, ruff, pytest y pytest-django, y el esqueleto
 generado por Django (`manage.py`, `config/__init__.py`, `config/asgi.py`, `config/settings.py`,
 `config/wsgi.py`). `E1-T1` reemplaza `config/settings.py` por completo. El esqueleto generado no
 se sube hasta el commit de `E1-T1`, así su clave secreta aleatoria nunca entra al historial.
