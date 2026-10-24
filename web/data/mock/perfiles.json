@@ -1,0 +1,78 @@
+{
+  "fuente": "datos_de_ejemplo",
+  "actualizado": "2026-10-24",
+  "k": 4,
+  "ejes": {"x": "Personas afectadas (log10)", "y": "Viviendas averiadas o destruidas (log10)"},
+  "perfiles": [
+    {
+      "id": 0,
+      "nombre": "Impacto bajo y localizado",
+      "descripcion": "Pocas familias afectadas y daños menores en viviendas.",
+      "n_eventos": 13304,
+      "centroide": {"x": 2.0, "y": 1.2}
+    },
+    {
+      "id": 1,
+      "nombre": "Daño en viviendas",
+      "descripcion": "Muchas viviendas averiadas con afectación moderada de personas.",
+      "n_eventos": 12061,
+      "centroide": {"x": 3.0, "y": 3.4}
+    },
+    {
+      "id": 2,
+      "nombre": "Afectación masiva",
+      "descripcion": "Gran número de personas y familias afectadas; típico de inundaciones extensas.",
+      "n_eventos": 5461,
+      "centroide": {"x": 4.4, "y": 3.0}
+    },
+    {
+      "id": 3,
+      "nombre": "Emergencia crítica",
+      "descripcion": "Alta afectación de personas y viviendas a la vez; requiere prioridad.",
+      "n_eventos": 13020,
+      "centroide": {"x": 4.6, "y": 4.4}
+    }
+  ],
+  "puntos": [
+    {"x": 2.16, "y": 1.27, "perfil": 0},
+    {"x": 2.21, "y": 1.93, "perfil": 0},
+    {"x": 1.61, "y": 1.39, "perfil": 0},
+    {"x": 1.53, "y": 0.92, "perfil": 0},
+    {"x": 1.73, "y": 2.05, "perfil": 0},
+    {"x": 1.88, "y": 0.84, "perfil": 0},
+    {"x": 1.46, "y": 0.92, "perfil": 0},
+    {"x": 2.57, "y": 0.63, "perfil": 0},
+    {"x": 1.67, "y": 2.56, "perfil": 0},
+    {"x": 2.38, "y": 1.55, "perfil": 0},
+    {"x": 2.36, "y": 4.37, "perfil": 1},
+    {"x": 1.87, "y": 4.0, "perfil": 1},
+    {"x": 3.56, "y": 3.7, "perfil": 1},
+    {"x": 3.22, "y": 2.5, "perfil": 1},
+    {"x": 2.75, "y": 3.79, "perfil": 1},
+    {"x": 2.11, "y": 3.42, "perfil": 1},
+    {"x": 3.2, "y": 3.49, "perfil": 1},
+    {"x": 2.9, "y": 4.17, "perfil": 1},
+    {"x": 3.74, "y": 3.72, "perfil": 1},
+    {"x": 2.76, "y": 4.01, "perfil": 1},
+    {"x": 4.58, "y": 2.63, "perfil": 2},
+    {"x": 3.84, "y": 3.49, "perfil": 2},
+    {"x": 4.95, "y": 3.08, "perfil": 2},
+    {"x": 4.52, "y": 3.22, "perfil": 2},
+    {"x": 5.2, "y": 3.31, "perfil": 2},
+    {"x": 4.66, "y": 3.27, "perfil": 2},
+    {"x": 3.62, "y": 3.64, "perfil": 2},
+    {"x": 4.88, "y": 3.26, "perfil": 2},
+    {"x": 3.41, "y": 2.68, "perfil": 2},
+    {"x": 4.82, "y": 2.09, "perfil": 2},
+    {"x": 4.28, "y": 3.27, "perfil": 3},
+    {"x": 4.44, "y": 4.04, "perfil": 3},
+    {"x": 4.62, "y": 4.57, "perfil": 3},
+    {"x": 4.94, "y": 4.88, "perfil": 3},
+    {"x": 5.35, "y": 4.46, "perfil": 3},
+    {"x": 4.73, "y": 4.7, "perfil": 3},
+    {"x": 4.9, "y": 4.79, "perfil": 3},
+    {"x": 4.33, "y": 4.18, "perfil": 3},
+    {"x": 5.16, "y": 4.96, "perfil": 3},
+    {"x": 5.16, "y": 4.22, "perfil": 3}
+  ]
+}

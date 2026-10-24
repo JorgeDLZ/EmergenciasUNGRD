@@ -1,0 +1,35 @@
+{
+  "fuente": "datos_de_ejemplo",
+  "simulaciones": [
+    {
+      "id": "sim-001",
+      "nombre": "Presupuesto base",
+      "fecha": "2026-10-20",
+      "parametros": {"presupuesto": 100, "recursos": 20, "emergencias": 8, "semilla": 42},
+      "resultado": {
+        "necesidades_atendidas_pct": {"uniforme": 58.6, "reglas": 69.1, "rl": 81.5},
+        "emergencias_sin_recursos": {"uniforme": 6, "reglas": 3, "rl": 1}
+      }
+    },
+    {
+      "id": "sim-002",
+      "nombre": "Presupuesto recortado al 50 %",
+      "fecha": "2026-10-21",
+      "parametros": {"presupuesto": 50, "recursos": 12, "emergencias": 8, "semilla": 7},
+      "resultado": {
+        "necesidades_atendidas_pct": {"uniforme": 34.2, "reglas": 43.5, "rl": 52.7},
+        "emergencias_sin_recursos": {"uniforme": 9, "reglas": 6, "rl": 4}
+      }
+    },
+    {
+      "id": "sim-003",
+      "nombre": "Temporada de lluvias (12 emergencias)",
+      "fecha": "2026-10-22",
+      "parametros": {"presupuesto": 125, "recursos": 30, "emergencias": 12, "semilla": 2026},
+      "resultado": {
+        "necesidades_atendidas_pct": {"uniforme": 61.0, "reglas": 72.3, "rl": 84.9},
+        "emergencias_sin_recursos": {"uniforme": 7, "reglas": 4, "rl": 2}
+      }
+    }
+  ]
+}

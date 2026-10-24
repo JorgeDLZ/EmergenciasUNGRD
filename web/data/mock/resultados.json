@@ -1,0 +1,65 @@
+{
+  "fuente": "datos_de_ejemplo",
+  "actualizado": "2026-10-24",
+  "resumen": [
+    {"id": "registros", "valor": "41.823", "etiqueta": "Registros UNGRD analizados"},
+    {"id": "periodo", "valor": "2010–2025", "etiqueta": "Periodo cubierto"},
+    {"id": "municipios", "valor": "1.103", "etiqueta": "Municipios con eventos"},
+    {"id": "mejora_rl", "valor": "+12,4 pp", "etiqueta": "Necesidades atendidas: RL frente a reglas"}
+  ],
+  "politicas": [
+    {"id": "uniforme", "nombre": "Política uniforme"},
+    {"id": "reglas", "nombre": "Basada en reglas"},
+    {"id": "rl", "nombre": "Agente RL (Q-learning)"}
+  ],
+  "metricas": [
+    {
+      "id": "necesidades_atendidas_pct",
+      "nombre": "Necesidades atendidas",
+      "unidad": "%",
+      "mejor": "mayor",
+      "valores": {"uniforme": 58.6, "reglas": 69.1, "rl": 81.5}
+    },
+    {
+      "id": "tiempo_atencion_h",
+      "nombre": "Tiempo simulado hasta la atención",
+      "unidad": "h",
+      "mejor": "menor",
+      "valores": {"uniforme": 31.2, "reglas": 22.8, "rl": 17.4}
+    },
+    {
+      "id": "costo_total_mcop",
+      "nombre": "Costo total de asignación",
+      "unidad": "M COP",
+      "mejor": "menor",
+      "valores": {"uniforme": 940.0, "reglas": 905.5, "rl": 872.3}
+    },
+    {
+      "id": "emergencias_sin_recursos",
+      "nombre": "Emergencias sin recursos",
+      "unidad": "eventos",
+      "mejor": "menor",
+      "valores": {"uniforme": 6.0, "reglas": 3.0, "rl": 1.0}
+    }
+  ],
+  "recompensa_por_episodio": {
+    "episodios": [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
+    "series": {
+      "uniforme": [-121.1, -121.4, -118.0, -121.2, -118.2, -119.1, -120.8, -118.1, -120.9, -118.5, -120.6],
+      "reglas": [-82.5, -79.8, -76.9, -80.9, -80.1, -77.5, -75.5, -77.7, -78.7, -75.2, -80.8],
+      "rl": [-156.4, -123.2, -98.6, -81.4, -67.7, -54.8, -55.9, -48.4, -45.4, -46.5, -43.7]
+    }
+  },
+  "sensibilidad_presupuesto": {
+    "presupuesto_pct": [50, 75, 100, 125, 150],
+    "series": {
+      "uniforme": [34.2, 47.9, 58.6, 66.0, 71.8],
+      "reglas": [43.5, 58.0, 69.1, 76.4, 81.0],
+      "rl": [52.7, 68.9, 81.5, 87.2, 90.6]
+    }
+  },
+  "estabilidad": {
+    "desviacion_recompensa": {"uniforme": 2.1, "reglas": 2.4, "rl": 6.8},
+    "semillas": 10
+  }
+}
