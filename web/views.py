@@ -4,6 +4,8 @@ from django.conf import settings
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
 
+from web import datos
+
 
 def _proximamente(request: HttpRequest, titulo: str) -> HttpResponse:
     """Página provisional: base.html muestra "Próximamente" en su bloque de contenido."""
@@ -11,7 +13,11 @@ def _proximamente(request: HttpRequest, titulo: str) -> HttpResponse:
 
 
 def inicio(request: HttpRequest) -> HttpResponse:
-    return _proximamente(request, "Inicio")
+    return render(
+        request,
+        "web/inicio.html",
+        {"titulo": "Inicio", "resumen": datos.resultados()["resumen"]},
+    )
 
 
 def metodologia(request: HttpRequest) -> HttpResponse:
