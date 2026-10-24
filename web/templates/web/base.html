@@ -1,0 +1,83 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}{{ titulo }}{% endblock %} · Cauce</title>
+  <meta name="description" content="{{ sitio.subtitulo }}: aprendizaje por refuerzo con datos de la UNGRD.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap">
+  <link rel="stylesheet" href="{% static 'web/css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'web/css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'web/css/components.css' %}">
+  {% block estilos %}{% endblock %}
+</head>
+<body>
+  <a class="saltar-contenido" href="#contenido">Saltar al contenido</a>
+
+  <header class="cabecera contenedor">
+    <a class="logo" href="{% url 'inicio' %}">Cauce</a>
+    {% with actual=request.resolver_match.url_name %}
+    <nav aria-label="Principal" class="nav-principal">
+      <a href="{% url 'inicio' %}"{% if actual == 'inicio' %} aria-current="page"{% endif %}>Inicio</a>
+      <a href="{% url 'metodologia' %}"{% if actual == 'metodologia' %} aria-current="page"{% endif %}>Metodología</a>
+      <a href="{% url 'resultados' %}"{% if actual == 'resultados' %} aria-current="page"{% endif %}>Resultados</a>
+      <a href="{% url 'simulador' %}"{% if actual == 'simulador' %} aria-current="page"{% endif %}>Simulador</a>
+    </nav>
+
+    <div class="acciones-cabecera">
+      {% if usuario %}
+        <span class="usuario-actual">{{ usuario.nombre }}</span>
+        <form method="post" action="{% url 'salir' %}">{% csrf_token %}<button type="submit" class="boton-secundario">Salir</button></form>
+      {% else %}
+        <a href="{% url 'login' %}">Iniciar sesión</a>
+        <a class="boton-primario" href="{% url 'simulador' %}">Probar el simulador</a>
+      {% endif %}
+    </div>
+
+    <details class="menu-movil">
+      <summary>Menú</summary>
+      <div class="menu-movil-panel">
+        <nav aria-label="Principal (móvil)">
+          <a href="{% url 'inicio' %}"{% if actual == 'inicio' %} aria-current="page"{% endif %}>Inicio</a>
+          <a href="{% url 'metodologia' %}"{% if actual == 'metodologia' %} aria-current="page"{% endif %}>Metodología</a>
+          <a href="{% url 'resultados' %}"{% if actual == 'resultados' %} aria-current="page"{% endif %}>Resultados</a>
+          <a href="{% url 'simulador' %}"{% if actual == 'simulador' %} aria-current="page"{% endif %}>Simulador</a>
+        </nav>
+        {% if usuario %}
+          <form method="post" action="{% url 'salir' %}">{% csrf_token %}<button type="submit" class="boton-secundario">Salir ({{ usuario.nombre }})</button></form>
+        {% else %}
+          <a href="{% url 'login' %}">Iniciar sesión</a>
+        {% endif %}
+      </div>
+    </details>
+    {% endwith %}
+  </header>
+
+  {% if sitio.datos_demo %}
+  <div class="contenedor">
+    <p class="insignia-demo" role="note">Datos de ejemplo — los resultados reales llegan en la etapa 3</p>
+  </div>
+  {% endif %}
+
+  <main id="contenido" tabindex="-1">
+    {% block contenido %}
+    <section class="seccion contenedor">
+      <p class="etiqueta">Próximamente</p>
+      <h1>{{ titulo }}</h1>
+      <p>Esta sección se construye en la etapa 1 del proyecto.</p>
+    </section>
+    {% endblock %}
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <p>{{ sitio.nombre }} · {{ sitio.subtitulo }}</p>
+      <p>Proyecto académico. Datos: Emergencias UNGRD V2 — Datos Abiertos Colombia. Los resultados son de una simulación, no recomendaciones operativas.</p>
+    </div>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>
