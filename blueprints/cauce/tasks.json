@@ -29,7 +29,7 @@
       "web/context_processors.py",
       "tests/test_health.py"
     ],
-    "status": "pending"
+    "status": "done"
   },
   {
     "id": "E1-T2",
