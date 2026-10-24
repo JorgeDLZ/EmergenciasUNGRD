@@ -90,7 +90,7 @@
       "web/static/web/css/components.css",
       "tests/test_estilos.py"
     ],
-    "status": "pending"
+    "status": "done"
   },
   {
     "id": "E1-T4",

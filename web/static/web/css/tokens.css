@@ -1,0 +1,104 @@
+/*
+ * Cauce — tokens del sistema de diseño.
+ * Basado en docs/design/ (estilo "aguas profundas"), con las correcciones del blueprint §7.
+ * ÚNICO archivo con colores literales: el resto del CSS usa var(--…).
+ */
+:root {
+  /* Superficies, de la más hundida a la más elevada. Sin sombras: la profundidad es color. */
+  --color-abismo: #011d1c; /* pie, paneles hundidos, fondo de gráficas */
+  --color-fondo: #012624; /* lienzo de la página */
+  --color-alga: #003734; /* tarjetas, botón secundario */
+  --color-pizarra: #707777; /* SOLO bordes y estados desactivados; nunca texto (3.5:1) */
+
+  /* Texto */
+  --color-titulo: #ffffff; /* títulos, navegación activa */
+  --color-texto: #bbc7c6; /* cuerpo (9.3:1 sobre el fondo) */
+  --color-texto-enfasis: #edfffe; /* etiquetas y cuerpo destacado */
+  --color-cita: #f2f2f2;
+  --color-cifra: #fde9ff; /* cifras grandes; nunca texto corrido */
+
+  /* Acentos */
+  --color-teal: #00827c; /* solo gráficas y degradados (3.4:1, no apto para texto) */
+  --color-aqua: #cbfffc;
+  --color-boton-icono: rgba(3, 81, 75, 0.5);
+  --gradiente-aurora: linear-gradient(
+    90deg,
+    #cbfffc 0%,
+    #edfffe 26.25%,
+    #fffdfa 47.57%,
+    #fad1ff 88.96%
+  ); /* SOLO el botón primario */
+  --gradiente-bioluminiscente: linear-gradient(90deg, #00827c 0%, #cbfffc 100%); /* barras y deslizadores */
+  --color-sobre-aurora: #012624; /* texto sobre el degradado aurora (≥12:1) */
+
+  /* Bordes */
+  --color-borde: rgba(255, 255, 255, 0.12); /* separadores decorativos */
+  --color-borde-control: #869a99; /* bordes de campos: 4.4:1 sobre alga, 5.4:1 sobre fondo */
+
+  /* Estados (extensión del sistema original, solo para estados) */
+  --color-error: #ffb4a9;
+  --color-aviso: #ffd479;
+  --color-exito: #7ee2b8;
+  --color-foco: #cbfffc;
+
+  /* Gráficas: el color nunca va solo, siempre con estilo de línea o marcador */
+  --serie-uniforme: #bbc7c6; /* línea discontinua / barras rayadas */
+  --serie-reglas: #00827c; /* línea continua */
+  --serie-rl: #fde9ff; /* línea continua gruesa: la protagonista */
+  --perfil-0: #fde9ff; /* círculo */
+  --perfil-1: #cbfffc; /* triángulo */
+  --perfil-2: #00827c; /* cuadrado */
+  --perfil-3: #bbc7c6; /* rombo */
+  --fondo-grafica: #011d1c;
+  --rejilla-grafica: rgba(255, 255, 255, 0.08);
+
+  /* Tipografía: Inter (Google Fonts) sustituye a Matter. Solo pesos 400 y 500. */
+  --fuente: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --peso-regular: 400;
+  --peso-medio: 500;
+  --texto-etiqueta: 0.75rem; /* 12px, mayúsculas */
+  --texto-pequeno: 0.875rem; /* 14px */
+  --texto-base: 1rem; /* 16px */
+  --texto-destacado: 1.25rem; /* 20px */
+  --texto-subtitulo: 1.5rem; /* 24px */
+  --texto-titulo: clamp(1.75rem, 1.2rem + 2vw, 2.25rem); /* 28 → 36px */
+  --texto-titulo-lg: clamp(2.1rem, 1.4rem + 3.5vw, 3.8rem); /* 34 → 61px */
+  --texto-display: clamp(2.5rem, 1.5rem + 5vw, 6rem); /* 40 → 96px */
+  --tracking-etiqueta: 0.12em;
+  --tracking-titulo: -0.04em;
+  --tracking-subtitulo: -0.02em;
+  --interlineado-titulo: 1;
+  --interlineado-cuerpo: 1.5;
+
+  /* Espaciado: base 4px */
+  --esp-1: 4px;
+  --esp-2: 8px;
+  --esp-3: 12px;
+  --esp-4: 16px;
+  --esp-5: 20px;
+  --esp-6: 24px;
+  --esp-8: 32px;
+  --esp-9: 36px;
+  --esp-10: 40px;
+  --esp-12: 48px;
+  --esp-16: 64px;
+  --esp-20: 80px;
+  --esp-30: 120px;
+
+  /* Maquetación */
+  --ancho-max: 1440px;
+  --ancho-lectura: 65ch;
+  --margen-lateral: 16px; /* base.css lo sube a 24px (≥768px) y 48px (≥1024px) */
+  --relleno-tarjeta: clamp(24px, 3vw, 48px);
+  --separacion-seccion: clamp(64px, 10vw, 120px);
+  --alto-cabecera: 72px;
+
+  /* Forma: solo dos radios */
+  --radio-pequeno: 6px; /* botones, campos, insignias */
+  --radio-tarjeta: 16px; /* tarjetas y paneles */
+
+  /* Movimiento */
+  --duracion-rapida: 150ms;
+  --duracion-media: 250ms;
+  --curva-salida: cubic-bezier(0.2, 0, 0, 1);
+}

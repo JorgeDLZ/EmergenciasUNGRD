@@ -1,0 +1,145 @@
+/*
+ * Cauce — base: reinicio, tipografía y maquetación general.
+ * Solo usa var(--…) de tokens.css.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--fuente);
+  font-size: var(--texto-base);
+  font-weight: var(--peso-regular);
+  line-height: var(--interlineado-cuerpo);
+}
+
+main {
+  flex: 1;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--esp-4);
+  color: var(--color-titulo);
+  font-weight: var(--peso-medio);
+  line-height: var(--interlineado-titulo);
+}
+
+h1 {
+  font-size: var(--texto-titulo-lg);
+  letter-spacing: var(--tracking-titulo);
+}
+
+h2 {
+  font-size: var(--texto-titulo);
+  letter-spacing: var(--tracking-subtitulo);
+}
+
+h3 {
+  font-size: var(--texto-subtitulo);
+  letter-spacing: var(--tracking-subtitulo);
+}
+
+p {
+  margin: 0 0 var(--esp-4);
+  max-width: var(--ancho-lectura);
+}
+
+a {
+  color: var(--color-texto-enfasis);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--color-titulo);
+}
+
+img,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-foco);
+  outline-offset: 2px;
+  border-radius: var(--radio-pequeno);
+}
+
+.contenedor {
+  width: 100%;
+  max-width: var(--ancho-max);
+  margin-inline: auto;
+  padding-inline: var(--margen-lateral);
+}
+
+.seccion {
+  padding-block: var(--separacion-seccion);
+}
+
+.saltar-contenido {
+  position: absolute;
+  top: calc(-1 * var(--esp-16));
+  left: var(--esp-4);
+  z-index: 10;
+  padding: var(--esp-3) var(--esp-4);
+  background: var(--color-alga);
+  color: var(--color-titulo);
+}
+
+.saltar-contenido:focus {
+  top: var(--esp-4);
+}
+
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --margen-lateral: var(--esp-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --margen-lateral: var(--esp-12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
