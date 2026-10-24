@@ -183,7 +183,7 @@
       "web/templates/500.html",
       "tests/test_produccion.py"
     ],
-    "status": "pending"
+    "status": "done"
   },
   {
     "id": "E2-T1",
