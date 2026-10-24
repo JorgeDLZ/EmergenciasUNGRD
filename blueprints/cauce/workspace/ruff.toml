@@ -1,0 +1,10 @@
+# Configuración de ruff (lint + formato). El blueprint vive dentro del repo y se excluye.
+line-length = 100
+target-version = "py312"
+extend-exclude = ["blueprints", "docs", "staticfiles", ".venv"]
+
+[lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[lint.isort]
+known-first-party = ["app", "config", "web"]

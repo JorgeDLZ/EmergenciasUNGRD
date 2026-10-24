@@ -1,0 +1,395 @@
+[
+  {
+    "id": "E1-T1",
+    "title": "Proyecto Django con chequeo de salud /health/",
+    "epic": "01-etapa-0-montaje",
+    "dependencies": [],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN se ejecuta `sh scripts/py manage.py check` THE SYSTEM SHALL terminar con código 0 sin reportar problemas.",
+      "WHEN llega un GET a /health/ THE SYSTEM SHALL responder 200 con el JSON {\"status\": \"ok\", \"app\": \"cauce\"}.",
+      "WHEN se arranca `manage.py runserver` como proceso real THE SYSTEM SHALL servir /health/ por HTTP con estado 200 (prueba test_servidor_real_sirve_health).",
+      "WHEN se ejecuta `sh scripts/py app.py check` THE SYSTEM SHALL terminar con código 0, y `settings.ROOT_URLCONF` SHALL ser \"app\" (las rutas viven en app.py).",
+      "WHEN se pide una ruta que ninguna URL define THE SYSTEM SHALL responder 404.",
+      "WHEN se ejecutan `sh scripts/py -m ruff check .` y `sh scripts/py -m ruff format --check .` desde la raíz, con el bundle presente en blueprints/ THE SYSTEM SHALL terminar con código 0."
+    ],
+    "verify": [
+      "sh scripts/py manage.py check",
+      "sh scripts/py app.py check",
+      "sh scripts/py -m pytest tests/test_health.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-01-django-health",
+    "files": [
+      "config/settings.py",
+      "app.py",
+      "web/views.py",
+      "web/context_processors.py",
+      "tests/test_health.py"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E1-T2",
+    "title": "Contrato de datos y JSON de ejemplo",
+    "epic": "01-etapa-0-montaje",
+    "dependencies": [
+      "E1-T1"
+    ],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN se llama `web.datos.resultados()` THE SYSTEM SHALL devolver web/data/mock/resultados.json con `fuente` igual a \"datos_de_ejemplo\" y las métricas necesidades_atendidas_pct, tiempo_atencion_h, costo_total_mcop y emergencias_sin_recursos en ese orden.",
+      "WHEN a una métrica le falta alguna de las políticas uniforme, reglas o rl THE SYSTEM SHALL lanzar `web.datos.DatosInvalidos` con un mensaje que contiene \"políticas\".",
+      "WHEN una serie de recompensa_por_episodio o sensibilidad_presupuesto tiene distinta longitud que su eje THE SYSTEM SHALL lanzar `DatosInvalidos` con un mensaje que contiene \"misma longitud\".",
+      "WHEN un punto de K-means apunta a un perfil que perfiles.json no define THE SYSTEM SHALL lanzar `DatosInvalidos` con un mensaje que contiene \"perfil desconocido\".",
+      "WHEN se llama `web.datos.simulacion(id)` con un id inexistente THE SYSTEM SHALL devolver None, y con un id existente SHALL devolver el diccionario de esa simulación."
+    ],
+    "verify": [
+      "sh scripts/py -m pytest tests/test_datos.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-02-contrato-datos",
+    "files": [
+      "web/data/mock/resultados.json",
+      "web/data/mock/perfiles.json",
+      "web/data/mock/simulaciones.json",
+      "web/datos.py",
+      "tests/test_datos.py"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E1-T3",
+    "title": "Tokens del sistema de diseño y CSS base",
+    "epic": "01-etapa-0-montaje",
+    "dependencies": [
+      "E1-T1"
+    ],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN se ejecuta tests/test_estilos.py THE SYSTEM SHALL encontrar declarada en web/static/web/css/tokens.css cada variable de la constante TOKENS, con la familia tipográfica \"Inter\".",
+      "WHEN se revisa cualquier archivo CSS distinto de tokens.css THE SYSTEM SHALL no contener colores literales hex, rgb(), rgba(), hsl() ni hsla() (los colores solo entran por var(--…)).",
+      "WHEN se revisa cualquier archivo CSS THE SYSTEM SHALL no contener box-shadow distinto de `none`, ni border-radius mayor de 16px o en %, ni font-weight distinto de 400 o 500.",
+      "WHEN se revisa base.css THE SYSTEM SHALL definir `:focus-visible`, un bloque `prefers-reduced-motion: reduce` y el enlace `.saltar-contenido`.",
+      "WHEN se revisa components.css THE SYSTEM SHALL definir .boton-primario, .boton-secundario, .boton-icono, .etiqueta, .tarjeta, .tarjeta-hundida, .stat e .insignia-demo."
+    ],
+    "verify": [
+      "sh scripts/py -m pytest tests/test_estilos.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-03-tokens-css",
+    "files": [
+      "web/static/web/css/tokens.css",
+      "web/static/web/css/base.css",
+      "web/static/web/css/components.css",
+      "tests/test_estilos.py"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E1-T4",
+    "title": "Tabla de rutas completa y plantilla base",
+    "epic": "01-etapa-0-montaje",
+    "dependencies": [
+      "E1-T3"
+    ],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN llega un GET a /, /metodologia/, /resultados/, /login/ o /registro/ THE SYSTEM SHALL responder 200 con `<html lang=\"es\">`, meta viewport, un título que termina en \"Cauce\", enlace de salto a #contenido, `<main id=\"contenido\"`, `<nav aria-label=\"Principal\"`, pie de página y exactamente un <h1>.",
+      "WHEN se muestra cualquier página pública THE SYSTEM SHALL enlazar las rutas inicio, metodologia, resultados y simulador, y marcar la actual con aria-current=\"page\".",
+      "WHEN llega un GET a /app/simulador/, /app/simulaciones/ o /app/simulaciones/sim-001/ THE SYSTEM SHALL responder 200 o un 302 cuyo Location empieza por /login/.",
+      "WHEN /salir/ o /app/api/simular/ reciben un GET THE SYSTEM SHALL responder 405, y WHEN /salir/ recibe un POST THE SYSTEM SHALL redirigir con 302 a /.",
+      "WHEN CAUCE_DATOS_DEMO es True THE SYSTEM SHALL mostrar el texto \"Datos de ejemplo\" en todas las páginas, y WHEN es False SHALL no mostrarlo.",
+      "WHEN DEBUG es False y se pide /styleguide/ THE SYSTEM SHALL responder 404."
+    ],
+    "verify": [
+      "sh scripts/py -m pytest tests/test_rutas.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-04-rutas-base",
+    "files": [
+      "app.py",
+      "web/views.py",
+      "web/views_app.py",
+      "web/templates/web/base.html",
+      "tests/test_rutas.py"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E1-T5",
+    "title": "Portada con cifras del contrato de datos",
+    "epic": "01-etapa-0-montaje",
+    "dependencies": [
+      "E1-T2",
+      "E1-T4"
+    ],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN llega un GET a / THE SYSTEM SHALL responder 200 con el titular \"¿Quién recibe ayuda primero?\", un elemento class=\"boton-primario\" y enlaces a /app/simulador/ y /metodologia/.",
+      "WHEN llega un GET a / THE SYSTEM SHALL mostrar exactamente 4 elementos class=\"stat\", cada uno con el `valor` y la `etiqueta` de una entrada de `resumen` en resultados.json.",
+      "WHEN llega un GET a / THE SYSTEM SHALL mostrar un elemento por cada uno de data-paso=\"datos\", data-paso=\"kmeans\" y data-paso=\"agente\".",
+      "WHEN llega un GET a / THE SYSTEM SHALL incluir `<canvas id=\"red-hero\" aria-hidden=\"true\"`, cargar web/js/red.js con defer y web/css/pages/inicio.css, y red.js SHALL contener una comprobación de prefers-reduced-motion."
+    ],
+    "verify": [
+      "sh scripts/py -m pytest tests/test_inicio.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-05-portada",
+    "files": [
+      "web/views.py",
+      "web/templates/web/inicio.html",
+      "web/static/web/css/pages/inicio.css",
+      "web/static/web/js/red.js",
+      "tests/test_inicio.py"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E1-T6",
+    "title": "Listo para Render: errores propios y README",
+    "epic": "01-etapa-0-montaje",
+    "dependencies": [
+      "E1-T5"
+    ],
+    "priority": "p0",
+    "acceptance": [
+      "WHEN se ejecuta `manage.py check --deploy` con RENDER=true, un DJANGO_SECRET_KEY de 60 caracteres y RENDER_EXTERNAL_HOSTNAME=cauce.onrender.com THE SYSTEM SHALL terminar con código 0.",
+      "WHEN se ejecuta cualquier comando de manage.py con RENDER=true y sin DJANGO_SECRET_KEY THE SYSTEM SHALL terminar con código 1 y \"DJANGO_SECRET_KEY\" en stderr.",
+      "WHEN se ejecuta `manage.py collectstatic --noinput` con RENDER=true y una clave secreta THE SYSTEM SHALL terminar con código 0 y escribir staticfiles/staticfiles.json.",
+      "WHEN se pide una ruta inexistente THE SYSTEM SHALL responder 404 con el texto \"Página no encontrada\" y un enlace a /, y la plantilla 500.html SHALL renderizarse sin contexto de petición con \"Algo salió mal\" y `<html lang=\"es\">`.",
+      "WHEN se lee README.md THE SYSTEM SHALL contener el comando de build `pip install -r requirements.txt && python manage.py collectstatic --noinput`, el de inicio `gunicorn config.wsgi:application --bind 0.0.0.0:$PORT`, DJANGO_SECRET_KEY, PYTHON_VERSION y /health/."
+    ],
+    "verify": [
+      "sh scripts/py -m pytest tests/test_produccion.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-06-produccion",
+    "files": [
+      "README.md",
+      "web/templates/404.html",
+      "web/templates/500.html",
+      "tests/test_produccion.py"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T1",
+    "title": "Componentes de la etapa 1 y guía de estilo",
+    "epic": "02-etapa-1-interfaz",
+    "dependencies": [
+      "E1-T6"
+    ],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN DEBUG es True y llega un GET a /styleguide/ THE SYSTEM SHALL responder 200 con secciones de id botones, tarjetas, cifras, etiquetas, formularios, tablas y alertas, incluyendo un ejemplo class=\"boton-primario\" y uno class=\"stat\".",
+      "WHEN DEBUG es False y llega un GET a /styleguide/ THE SYSTEM SHALL responder 404.",
+      "WHEN se revisa components.css THE SYSTEM SHALL definir .campo, .campo-error, .deslizador, .tabla, .alerta, .alerta-error, .dividido, .panel-grafica y .estado-vacio, y seguir cumpliendo todas las reglas de tests/test_estilos.py."
+    ],
+    "verify": [
+      "sh scripts/py -m pytest tests/test_styleguide.py tests/test_estilos.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-07-styleguide",
+    "files": [
+      "web/views.py",
+      "web/templates/web/styleguide.html",
+      "web/static/web/css/components.css",
+      "tests/test_styleguide.py"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T2",
+    "title": "Página de metodología",
+    "epic": "02-etapa-1-interfaz",
+    "dependencies": [
+      "E2-T1"
+    ],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN llega un GET a /metodologia/ THE SYSTEM SHALL responder 200 con `<section id=\"datos\"`, `<section id=\"kmeans\"`, `<section id=\"formulacion\"` y `<section id=\"limitaciones\"`, y el texto \"Emergencias UNGRD V2\".",
+      "WHEN llega un GET a /metodologia/ THE SYSTEM SHALL mostrar celdas `<th scope=\"row\">` para Agente, Entorno, Estado, Acciones, Recompensa, Restricciones y Episodio.",
+      "WHEN llega un GET a /metodologia/ THE SYSTEM SHALL mostrar el `nombre` de cada perfil de perfiles.json y la frase \"no es un modelo predictivo\"."
+    ],
+    "verify": [
+      "sh scripts/py -m pytest tests/test_metodologia.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-08-metodologia",
+    "files": [
+      "web/views.py",
+      "web/templates/web/metodologia.html",
+      "web/static/web/css/pages/metodologia.css",
+      "tests/test_metodologia.py"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T3",
+    "title": "Panel de resultados con Chart.js",
+    "epic": "02-etapa-1-interfaz",
+    "dependencies": [
+      "E2-T2"
+    ],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN llega un GET a /resultados/ THE SYSTEM SHALL incrustar los datos con `<script id=\"datos-resultados\" type=\"application/json\">` y `<script id=\"datos-perfiles\" type=\"application/json\">`.",
+      "WHEN llega un GET a /resultados/ THE SYSTEM SHALL mostrar los canvas grafica-metricas, grafica-recompensa, grafica-sensibilidad y grafica-perfiles, cada uno con role=\"img\" y aria-label no vacío, y al menos 4 <details> con una <table> de los mismos datos.",
+      "WHEN llega un GET a /resultados/ THE SYSTEM SHALL mostrar un class=\"stat\" por cada métrica de resultados.json, con el `nombre` de cada métrica.",
+      "WHEN llega un GET a /resultados/ THE SYSTEM SHALL cargar Chart.js 4.5.1 desde cdnjs con su hash de integridad sha512 y crossorigin=\"anonymous\", y después web/js/graficas.js.",
+      "WHEN se lee web/js/graficas.js THE SYSTEM SHALL usar --serie-uniforme, --serie-reglas, --serie-rl y --fondo-grafica, comprobar prefers-reduced-motion y usar borderDash."
+    ],
+    "verify": [
+      "sh scripts/py -m pytest tests/test_resultados.py tests/test_estilos.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-09-resultados",
+    "files": [
+      "web/views.py",
+      "web/templates/web/resultados.html",
+      "web/static/web/js/graficas.js",
+      "web/static/web/css/pages/resultados.css",
+      "tests/test_resultados.py"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T4",
+    "title": "Login simulado que protege la app",
+    "epic": "02-etapa-1-interfaz",
+    "dependencies": [
+      "E1-T6"
+    ],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN llega un GET a /login/ THE SYSTEM SHALL mostrar un formulario POST con <label for=\"id_correo\">, un input email name=\"correo\" id=\"id_correo\", un input de clave con autocomplete=\"current-password\", sin atributo onpaste, y el texto \"Modo demostración\".",
+      "WHEN /login/ recibe un POST con cualquier correo válido THE SYSTEM SHALL guardar {correo en minúsculas, nombre} en la sesión y redirigir con 302 a /app/simulador/.",
+      "WHEN /login/ recibe un POST con un correo inválido THE SYSTEM SHALL responder 200 con \"Escribe un correo válido\" y aria-invalid=\"true\" en el campo, sin crear usuario en la sesión.",
+      "WHEN el POST de login trae ?next=/app/simulaciones/ THE SYSTEM SHALL redirigir ahí, y WHEN next apunta a otro dominio SHALL redirigir a /app/simulador/.",
+      "WHEN un visitante anónimo pide /app/simulador/ THE SYSTEM SHALL redirigir con 302 a /login/?next=%2Fapp%2Fsimulador%2F, y WHEN hay sesión SHALL mostrar en la cabecera el nombre del usuario y un formulario que envía a /salir/.",
+      "WHEN /salir/ recibe un POST THE SYSTEM SHALL vaciar la sesión y redirigir a /."
+    ],
+    "verify": [
+      "sh scripts/py -m pytest tests/test_acceso.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-10-login-demo",
+    "files": [
+      "web/auth_demo.py",
+      "web/context_processors.py",
+      "web/views_app.py",
+      "web/templates/web/acceso.html",
+      "tests/test_acceso.py"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T5",
+    "title": "Simulador con motor de ejemplo y API JSON",
+    "epic": "02-etapa-1-interfaz",
+    "dependencies": [
+      "E2-T4"
+    ],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN se llama `simular()` dos veces con los mismos parámetros THE SYSTEM SHALL devolver resultados idénticos, y otra semilla SHALL cambiar el resultado.",
+      "WHEN `simular()` se ejecuta con las semillas 0, 7, 42, 2026 y 9999 THE SYSTEM SHALL asignar como máximo `recursos` unidades por política, devolver una fila por emergencia y ordenar necesidades_atendidas_pct como rl > reglas > uniforme.",
+      "WHEN un parámetro sale de presupuesto 50-150, recursos 5-50, emergencias 3-12 o semilla 0-9999, o no es entero THE SYSTEM SHALL lanzar ValueError, y la API SHALL responder 400 con error.codigo \"parametro_invalido\".",
+      "WHEN llega un POST a /app/api/simular/ sin sesión THE SYSTEM SHALL responder 401 con error.codigo \"no_autenticado\"; con sesión y JSON válido SHALL responder 200 con exactamente `simular(**parametros)`; sin token CSRF con verificación activa SHALL responder 403.",
+      "WHEN un usuario con sesión abre /app/simulador/ THE SYSTEM SHALL mostrar los campos con etiqueta presupuesto, recursos, emergencias y semilla (ids id_<nombre>), una región `id=\"resultado-simulacion\" aria-live=\"polite\"`, un token CSRF y web/js/simulador.js."
+    ],
+    "verify": [
+      "sh scripts/py -m pytest tests/test_simulador.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-11-simulador",
+    "files": [
+      "web/simulacion_demo.py",
+      "web/views_app.py",
+      "web/templates/web/app/simulador.html",
+      "web/static/web/js/simulador.js",
+      "tests/test_simulador.py"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T6",
+    "title": "Mis simulaciones: lista, detalle y estado vacío",
+    "epic": "02-etapa-1-interfaz",
+    "dependencies": [
+      "E2-T5"
+    ],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN un usuario con sesión abre /app/simulaciones/ THE SYSTEM SHALL listar cada simulación de simulaciones.json por su `nombre` con un enlace a /app/simulaciones/<id>/.",
+      "WHEN un usuario con sesión abre /app/simulaciones/<id>/ con un id existente THE SYSTEM SHALL responder 200 con el nombre, una <table> y cada valor de los parámetros; con un id inexistente SHALL responder 404.",
+      "WHEN no hay simulaciones THE SYSTEM SHALL mostrar \"Aún no hay simulaciones guardadas\" y un enlace a /app/simulador/.",
+      "WHEN un visitante anónimo abre /app/simulaciones/ THE SYSTEM SHALL redirigir con 302 a una URL que empieza por /login/."
+    ],
+    "verify": [
+      "sh scripts/py -m pytest tests/test_simulaciones.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-12-simulaciones",
+    "files": [
+      "web/views_app.py",
+      "web/templates/web/app/simulaciones.html",
+      "web/templates/web/app/simulacion_detalle.html",
+      "tests/test_simulaciones.py"
+    ],
+    "status": "pending"
+  },
+  {
+    "id": "E2-T7",
+    "title": "Revisión automática de accesibilidad",
+    "epic": "02-etapa-1-interfaz",
+    "dependencies": [
+      "E2-T3",
+      "E2-T6"
+    ],
+    "priority": "p1",
+    "acceptance": [
+      "WHEN se analizan todas las páginas públicas, las de la app con sesión, un detalle de simulación, la página 404 y la guía de estilo (con DEBUG) THE SYSTEM SHALL encontrar exactamente un <h1> en cada una.",
+      "WHEN se analizan esas páginas THE SYSTEM SHALL no encontrar atributos style en línea ni manejadores on* en línea en ningún elemento.",
+      "WHEN se analizan esas páginas THE SYSTEM SHALL encontrar alt en cada <img>, role=\"img\" con aria-label (o aria-hidden=\"true\") en cada <canvas>, rel=\"noopener\" en cada enlace target=\"_blank\" y un <label for> para cada <input> visible.",
+      "WHEN se analiza la meta viewport THE SYSTEM SHALL no contener user-scalable=no ni maximum-scale=1."
+    ],
+    "verify": [
+      "sh scripts/py -m pytest tests/test_accesibilidad.py",
+      "sh scripts/py -m ruff check .",
+      "sh scripts/py -m ruff format --check .",
+      "sh scripts/py -m pytest"
+    ],
+    "checkpoint": "step-13-accesibilidad",
+    "files": [
+      "tests/test_accesibilidad.py",
+      "web/templates/**/*.html"
+    ],
+    "status": "pending"
+  }
+]

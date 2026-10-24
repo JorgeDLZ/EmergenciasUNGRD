@@ -1,0 +1,7 @@
+#!/bin/sh
+# Ejecuta el Python del entorno virtual del proyecto, en Windows (Git Bash) o en Linux/macOS.
+# Uso: sh scripts/py <argumentos de python>   p. ej.  sh scripts/py -m pytest
+if [ -x .venv/Scripts/python.exe ]; then
+  exec .venv/Scripts/python.exe "$@"
+fi
+exec .venv/bin/python "$@"

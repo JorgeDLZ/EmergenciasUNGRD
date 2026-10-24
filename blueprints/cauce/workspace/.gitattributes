@@ -1,0 +1,8 @@
+# Finales de línea normalizados. scripts/py se ejecuta con `sh`: con CRLF fallaría en Git Bash.
+* text=auto
+scripts/py text eol=lf
+*.py text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.json text eol=lf

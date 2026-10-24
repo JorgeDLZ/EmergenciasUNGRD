@@ -1,0 +1,4 @@
+# Dependencias de la WEB: lo único que Render instala (ver README.md).
+Django==6.1.2
+gunicorn==26.2.0
+whitenoise==6.12.0
